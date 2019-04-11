@@ -59,6 +59,7 @@ for K in (1, 5, 10, 50):
 # ## 2. The error rate (number of misclassifications) on both the training and validation data as a function of K = [1, 2, 5, 10, 50, 100, 200] for features (1, 2).
 
 # %%
+Xtr, Xva, Ytr, Yva = ml.splitData(X[:, :2], Y, 0.75)
 K_values = [1, 2, 5, 10, 50, 100, 200]
 errTrain = [0] * len(K_values)
 errVal = [0] * len(K_values)
