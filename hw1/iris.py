@@ -75,7 +75,7 @@ pt.semilogx(K_values, errVal, 'green')
 pt.show()
 
 # %% [markdown]
-# ### Looking at the plots, **K = 10** has the ideal range for model complexity. Hence **K=10** is the recommended value for the features (1,2).
+# ### Looking at the plots, **K = 50** has the ideal range for model complexity. Hence **K=50** is the recommended value for the features (1,2).
 
 # %% [markdown]
 # ## 3. The error rate (number of misclassifications) on both the training and validation data as a function of K = [1, 2, 5, 10, 50, 100, 200] for all features.
@@ -96,7 +96,6 @@ pt.semilogx(K_values, errVal, 'green')
 pt.show()
 
 # %% [markdown]
-# ### Looking at the plots, **K = 10** has the ideal range for model complexity. Hence **K=10** is the recommended value for all the features as well.
-# ### However, here the value of K is not as good a fit as it was for features (1, 2). We could experiment with a K such that 10 < K < 50 to arrive at a better fit for the model.
+# ### Looking at the plots, **K = 10** has the ideal range for model complexity. Hence **K=10** is the recommended value for all the features.
 # %% [markdown]
 # # Problem 3: Naïve Bayes Classifiers
