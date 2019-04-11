@@ -67,11 +67,18 @@ for i, K in enumerate(K_values):
     learner = ml.knn.knnClassify(Xtr, Ytr, K)
     YvaHat = learner.predict(Xva)
     YtrHat = learner.predict(Xtr)
-    errTrain[i] = np.count_nonzero(YtrHat != Ytr) / len(Ytr)
-    errVal[i] = np.count_nonzero(YvaHat != Yva) / len(Yva)
+    errTrain[i] = np.mean(YtrHat != Ytr)
+    errVal[i] = np.mean(YvaHat != Yva)
 
-pt.semilogx(K_values, errTrain, 'red')
-pt.semilogx(K_values, errVal, 'green')
+pt.semilogx(
+    K_values, errTrain, 'red', marker='x',
+    label='Training set error rate'
+)
+pt.semilogx(
+    K_values, errVal, 'green', marker='o',
+    label='Validation set error rate'
+)
+pt.legend()
 pt.show()
 
 # %% [markdown]
@@ -80,7 +87,6 @@ pt.show()
 # %% [markdown]
 # ## 3. The error rate (number of misclassifications) on both the training and validation data as a function of K = [1, 2, 5, 10, 50, 100, 200] for all features.
 # %%
-X, Y = ml.shuffleData(X, Y)
 Xtr, Xva, Ytr, Yva = ml.splitData(X, Y, 0.75)
 errTrain = [0] * len(K_values)
 errVal = [0] * len(K_values)
@@ -88,11 +94,18 @@ for i, K in enumerate(K_values):
     learner = ml.knn.knnClassify(Xtr, Ytr, K)
     YvaHat = learner.predict(Xva)
     YtrHat = learner.predict(Xtr)
-    errTrain[i] = np.count_nonzero(YtrHat != Ytr) / len(Ytr)
-    errVal[i] = np.count_nonzero(YvaHat != Yva) / len(Yva)
+    errTrain[i] = np.mean(YtrHat != Ytr)
+    errVal[i] = np.mean(YvaHat != Yva)
 
-pt.semilogx(K_values, errTrain, 'red')
-pt.semilogx(K_values, errVal, 'green')
+pt.semilogx(
+    K_values, errTrain, 'red', marker='x',
+    label='Training set error rate'
+)
+pt.semilogx(
+    K_values, errVal, 'green', marker='o',
+    label='Validation set error rate'
+)
+pt.legend()
 pt.show()
 
 # %% [markdown]
