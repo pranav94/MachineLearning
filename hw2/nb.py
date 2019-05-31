@@ -21,7 +21,7 @@ print("Yte Shape: ", Yte.shape)
 
 # %% [markdown]
 # ## 2. Creating a linear regression predictor
-# a) Creating a linear regression predictor
+# ### a) Creating a linear regression predictor
 # %%
 lr = ml.linear.linearRegress(Xtr, Ytr)
 xs = np.linspace(0, 10, 200)
@@ -34,14 +34,17 @@ pt.xlabel("X values")
 pt.ylabel("Y label")
 pt.show()
 
-print("Linear regression co-efficients:")
+# %% [markdown]
+# ### b) Linear Regression co-efficients.
+
 print(lr.theta)
 
 print("Co-efficients obtained from the predicted values:")
 print(ys[0], (ys[199]-ys[0])/(xs[199]-xs[0]))
 
 # %% [markdown]
-# b) From above it is clear that the regression co-efficients match our plot.
+# From above it is clear that the regression co-efficients match our plot.
+# ### c) MSE for the predictions.
 
 # %%
 
@@ -130,16 +133,16 @@ pt.show()
 # ### c) A ploynomial of degree 10 is ideal looking at the graph above. MSE for test data is minimal when degree = 10.
 
 # # Problem 2: Cross-validation
-# ### a) Plot the five-fold cross-validation error and test error.
+# ### 1) Plot the five-fold cross-validation error and test error.
 # %%
 errCross = [0] * len(degrees)
 errTest = [0] * len(degrees)
-nFolds = 5
+nFold = 5
 for index, degree in enumerate(degrees):
-    errorCrossValidation = [0] * nFolds
-    errCrossValidationTesting = [0] * nFolds
-    for iFold in range(nFolds):
-        Xti, Xvi, Yti, Yvi = ml.crossValidate(Xtr, Ytr, nFolds, iFold)
+    errorCrossValidation = [0] * nFold
+    errCrossValidationTesting = [0] * nFold
+    for iFold in range(nFold):
+        Xti, Xvi, Yti, Yvi = ml.crossValidate(Xtr, Ytr, nFold, iFold)
         XtiP = ml.transforms.fpoly(Xti, degree, bias=False)
         XtiP, params = ml.transforms.rescale(XtiP)
         XviP = Phi(Xvi, degree, params)
@@ -162,9 +165,39 @@ pt.semilogy(
 )
 pt.legend()
 pt.show()
-#%% [markdown]
-# ### b) How do the MSE estimates from five-fold cross-validation compare to the MSEs evaluated on the actual test data
-# For smaller degrees, MSE from both tends to remain approximately the same. But as the degree increases, MSE from the test data 
 # %% [markdown]
+# ### 2) How do the MSE estimates from five-fold cross-validation compare to the MSEs evaluated on the actual test data
+# For smaller degrees, MSE from both tends to remain approximately the same. But as the degree increases, MSE from the 5-fold validation seems to be much higher than the MSE on the actual test data.
+# Hence, on higher degrees MSE on the actual test data might be much different than the MSE calculated using 5-fold validation making it less reliable.
+
+# ### 3) Which polynomial degree do you recommend based on five-fold cross-validation error?
+# Based on the graph above, it is clear that MSE on the validation set is minimum when degree is 5. Hence degree=5 would be the recommended value when a 5-fold cross-validation is used.
+# ### 4) For the degree that you picked in step 3, plot the cross-validation error as the number of folds is varied.
+
+# %%
+nFolds = [2, 3, 4, 5, 6, 10, 12, 15]
+degree = 5
+errCross = [0] * len(nFolds)
+for index, nFold in enumerate(nFolds):
+    errorCrossValidation = [0] * nFold
+    for iFold in range(nFold):
+        Xti, Xvi, Yti, Yvi = ml.crossValidate(Xtr, Ytr, nFold, iFold)
+        XtiP = ml.transforms.fpoly(Xti, degree, bias=False)
+        XtiP, params = ml.transforms.rescale(XtiP)
+        XviP = Phi(Xvi, degree, params)
+        lr = ml.linear.linearRegress(XtiP, Yti)
+        errorCrossValidation[iFold] = mse(XviP, Yvi, lr)
+    errCross[index] = np.mean(errorCrossValidation)
+
+pt.ylabel("Mean Squared Error")
+pt.xlabel("Fold")
+pt.semilogy(
+    nFolds, errCross, 'red', marker='x',
+    label='Cross-validation MSE'
+)
+pt.legend()
+pt.show()
+# %% [markdown]
+# From the above graph, it is clear that when the fold=2 or 4, MSE is extremely high. But when fold=3, the MSE is low. This can be attributed to the inherent bias in the given data. For lower folds, this bias is aggravated as biased data fall in the same folds. For example, we can assume that similar data is being regarded under the same fold when fold=2/4, but split into different folds when fold=3. This can be avoided by increasing the fold until we remove the bias. But, since we are using Leave-One-Out-Cross-Validation, increasing the fold also means that we increase the training data. This might result in a slightly higher MSE for the small validation data set. Looking at the graph, it is clear that fold=5 gives us the perfect balance where we remove the bias and still maintain the low MSE. However, if we want to ensure the removal of bias we could increase our fold value since the MSE grows very slowly with the number of folds.
 # # Statement of collaboration
 # I have not collaborated with anyone for this homework and have maintained the UCI code of honesty.
